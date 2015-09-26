@@ -19,6 +19,8 @@ public class PlayerMover : MonoBehaviour {
     private Quaternion defaultLeanRotation = Quaternion.Euler (new Vector3 (0, 0, 0));
     private Vector3 preJumpDesiredDirection = Vector3.zero;
     private float yMovement = 0;
+	private bool knockedTick = false;
+	private bool isGettingUp = false;
 
     void Start () {
         animator = GetComponent<Animator> ();
@@ -29,10 +31,14 @@ public class PlayerMover : MonoBehaviour {
     void Update () {
         FindDirection ();
         Jumping ();
+		Knocking();
         Move ();
     }
 
     void FindDirection () {
+		if (isBeingKnocked || isGettingUp) {
+			return;
+		}
         desiredDirection = new Vector3 (Input.GetAxis ("Horizontal"), 0, Input.GetAxis ("Vertical"));
         if (desiredDirection.sqrMagnitude > 1) {
             desiredDirection = desiredDirection.normalized;
@@ -60,11 +66,15 @@ public class PlayerMover : MonoBehaviour {
     }
 
     void Jumping () {
+		if (isBeingKnocked) {
+			yMovement -= gravity * Time.deltaTime;
+			return;
+		}
         if (controller.isGrounded) {
             yMovement = 0;
+            preJumpDesiredDirection = desiredDirection;
             if (Input.GetButton ("Jump")) {
                 yMovement = jumpSpeed;
-                preJumpDesiredDirection = desiredDirection;
             }
         } else {
             preJumpDesiredDirection = Vector3.Lerp (preJumpDesiredDirection, desiredDirection, Time.deltaTime);
@@ -76,10 +86,27 @@ public class PlayerMover : MonoBehaviour {
         yMovement -= gravity * Time.deltaTime;
     }
 
+	void Knocking() {
+		if (!isBeingKnocked) {
+			return;
+		}
+		if (controller.isGrounded && knockedTick) {
+			desiredDirection = Vector3.zero;
+			isBeingKnocked = false;
+			knockedTick = false;
+			isGettingUp = true;
+			animator.SetTrigger("IsGettingUp");
+		} else {
+			knockedTick = true;
+		}
+	}
+
     void Move () {
         desiredDirection.y = yMovement;
         preJumpDesiredDirection.y = yMovement;
-        if (controller.isGrounded) {
+		if (isBeingKnocked) {
+			controller.Move (desiredDirection * Time.deltaTime);
+		} else if (controller.isGrounded) {
             controller.Move (desiredDirection * Time.deltaTime);
         } else {
             controller.Move (preJumpDesiredDirection * Time.deltaTime);
@@ -88,21 +115,30 @@ public class PlayerMover : MonoBehaviour {
     }
 
     public void Bounced () {
-        //isBouncing = true;
+		Debug.Log("in bounce");
+		if (!isBeingKnocked) {
+			isBouncing = true;
+		}
     }
 
     public void Knocked (GameObject knocker) {
         Debug.Log ("inknocked");
+		if (isBeingKnocked) {
+			return;
+		}
         isBeingKnocked = true;
         desiredDirection = new Vector3 (
             this.transform.position.x - knocker.transform.position.x, 0,
             this.transform.position.z - knocker.transform.position.z);
         desiredDirection = desiredDirection.normalized;
-        Debug.Log ("dd " + desiredDirection);
 
         this.transform.rotation = Quaternion.LookRotation (-desiredDirection, Vector3.up);
 
-        desiredDirection *= speed;
-        desiredDirection.y = jumpSpeed;
+        desiredDirection *= (speed / 2);
+		yMovement = (jumpSpeed * 0.75f);
     }
+
+	public void FinishedGettingUp () {
+		isGettingUp = false;
+	}
 }

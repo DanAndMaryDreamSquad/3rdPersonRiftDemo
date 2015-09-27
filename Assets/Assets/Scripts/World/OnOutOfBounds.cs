@@ -10,7 +10,7 @@ public class OnOutOfBounds : MonoBehaviour {
         playerHealth = player.GetComponent<PlayerHealth> ();
     }
 
-    void OnTriggerExit (Collider other) {
+    void OnTriggerEnter (Collider other) {
         if (other.tag == "Player") {
             playerHealth.Respawn ();
         } else {

@@ -20,6 +20,14 @@ public class PlayerHealth : MonoBehaviour {
 	}
 
     public void Respawn() {
-        this.transform.position = respawnPoint.transform.position;
-    }
+		playerMover.isBeingKnocked = true;
+		animator.SetTrigger("IsLieDown");
+		this.transform.position = respawnPoint.transform.position;
+		this.transform.rotation = respawnPoint.transform.rotation;
+		this.transform.Rotate(Vector3.up, -90);
+	}
+	
+	public void SetRespawnPoint(GameObject respawnPoint) {
+		this.respawnPoint = respawnPoint;
+	}
 }

@@ -28,7 +28,7 @@ public class PlayerMover : MonoBehaviour {
         lastDesiredFacingRotation = Quaternion.Euler (0, 45, 0);
     }
 
-    void Update () {
+	void Update () {
         FindDirection ();
         Jumping ();
 		Knocking();
@@ -45,8 +45,13 @@ public class PlayerMover : MonoBehaviour {
         }
         if (desiredDirection.sqrMagnitude == 0) {
             fullStop = true;
-        }
-        desiredDirection = camera.transform.TransformDirection (desiredDirection);
+		}
+		if (!isMoving && desiredDirection.sqrMagnitude <= 0.05f) {
+			desiredDirection = Vector3.zero;
+		}
+
+		desiredDirection = camera.transform.TransformDirection (desiredDirection);
+		desiredDirection = Quaternion.AngleAxis(-camera.transform.eulerAngles.x, camera.transform.right) * desiredDirection;
         desiredDirection.y = 0.0f;
 
         if ((fullStop && desiredDirection.sqrMagnitude > 0.0f) || (!isMoving && desiredDirection.sqrMagnitude > 0.05f) || (isMoving && desiredDirection.sqrMagnitude > 0.05f)) {

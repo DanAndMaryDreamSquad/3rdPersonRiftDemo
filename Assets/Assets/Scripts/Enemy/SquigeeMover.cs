@@ -50,6 +50,9 @@ public class SquigeeMover : MonoBehaviour {
 	}
 
 	bool ReachedDestination() {
+		if (nav.pathStatus == NavMeshPathStatus.PathPartial) {
+			return true;
+		}
 		if (!nav.pathPending){
 			if (nav.remainingDistance <= nav.stoppingDistance){
 				if (!nav.hasPath || nav.velocity.sqrMagnitude == 0f){
@@ -58,6 +61,11 @@ public class SquigeeMover : MonoBehaviour {
 			}
 		}
 		return false;
+	}
+
+	public void KnockedPlayer() {
+		isAggroed = false;
+		animator.SetBool("IsWalking", false);
 	}
 
 }

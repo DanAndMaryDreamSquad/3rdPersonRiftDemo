@@ -17,6 +17,7 @@ public class SquigeeOnCollideHitPlayer : MonoBehaviour {
 	void OnTriggerEnter(Collider other) {
 		if (other.gameObject.CompareTag ("Player")) {
 			playerHealth.Knocked(this.gameObject);
+			squigeeMover.KnockedPlayer();
 		}
 	}
 }

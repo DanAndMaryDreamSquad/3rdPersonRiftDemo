@@ -9,6 +9,7 @@ public class MenuCursor : MonoBehaviour {
     MenuOption currentSelection;
     float zOffset = 16f;
     bool canMove = false;
+    bool canSelect = false;
     float speed = 5f;
 
     // Use this for initialization
@@ -42,8 +43,12 @@ public class MenuCursor : MonoBehaviour {
         target.z = target.z + zOffset;
         this.transform.position = Vector3.Lerp(this.transform.position, target, Time.deltaTime * speed);
 
-        if (Input.GetButton ("Jump")) {
+        if (canSelect && Input.GetButton ("Jump")) {
             currentSelection.ActivateItem();
+            canSelect = false;
+        }
+        if (!Input.GetButton ("Jump")) {
+            canSelect = true;
         }
 
     }

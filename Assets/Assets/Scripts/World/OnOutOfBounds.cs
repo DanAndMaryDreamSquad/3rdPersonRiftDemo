@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class OnOutOfBounds : MonoBehaviour {
@@ -12,7 +12,7 @@ public class OnOutOfBounds : MonoBehaviour {
 
     void OnTriggerEnter (Collider other) {
         if (other.tag == "Player") {
-            playerHealth.Respawn ();
+            playerHealth.StartRespawn ();
         } else {
             Destroy (other.gameObject);
         }

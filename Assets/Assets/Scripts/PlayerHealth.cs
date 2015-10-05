@@ -3,7 +3,8 @@ using System.Collections;
 
 public class PlayerHealth : MonoBehaviour {
 
-    public GameObject respawnPoint;
+	public GameObject respawnPoint;
+	public FollowCamera followCamera;
 	Animator animator;
 	PlayerMover playerMover;
 
@@ -19,8 +20,12 @@ public class PlayerHealth : MonoBehaviour {
 		}
 	}
 
-    public void Respawn() {
+    public void StartRespawn() {
 		playerMover.isBeingKnocked = true;
+		followCamera.DefeatFade(this);
+	}
+
+	public void EndRespawn() {
 		animator.SetTrigger("IsLieDown");
 		this.transform.position = respawnPoint.transform.position;
 		this.transform.rotation = respawnPoint.transform.rotation;

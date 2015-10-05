@@ -6,7 +6,8 @@ public class SemiAutoCameraAction : MenuAction {
 	
 	public Text helpText;
 	
-	public override void ActivateItem() {
+    public override void ActivateItem() {
+        GameManager.instance.SetCameraMode(GameManager.CameraMode.SEMI_AUTO); 
 		Application.LoadLevel("sandbox");
 	}
 	public override void OnCursorOver() {

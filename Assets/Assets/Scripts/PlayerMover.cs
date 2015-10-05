@@ -7,7 +7,8 @@ public class PlayerMover : MonoBehaviour {
     public float jumpSpeed = 8.0F;
     public float gravity = 20.0F;
     public float runAngle;
-    public GameObject camera;
+	public GameObject camera;
+	public GameObject lastCameraTransform;
     private Vector3 desiredDirection = Vector3.zero;
     private CharacterController controller;
     private Animator animator;
@@ -25,7 +26,7 @@ public class PlayerMover : MonoBehaviour {
     void Start () {
         animator = GetComponent<Animator> ();
         controller = GetComponent<CharacterController> ();
-        lastDesiredFacingRotation = Quaternion.Euler (0, 45, 0);
+		lastDesiredFacingRotation = Quaternion.Euler (0, 45, 0);
     }
 
 	void Update () {
@@ -50,7 +51,7 @@ public class PlayerMover : MonoBehaviour {
 			desiredDirection = Vector3.zero;
 		}
 
-		desiredDirection = camera.transform.TransformDirection (desiredDirection);
+		desiredDirection = lastCameraTransform.transform.TransformDirection (desiredDirection);
 		desiredDirection = Quaternion.AngleAxis(-camera.transform.eulerAngles.x, camera.transform.right) * desiredDirection;
         desiredDirection.y = 0.0f;
 

@@ -6,7 +6,8 @@ public class ManualCameraAction : MenuAction {
 	
 	public Text helpText;
 	
-	public override void ActivateItem() {
+    public override void ActivateItem() {
+        GameManager.instance.SetCameraMode(GameManager.CameraMode.MANUAL); 
 		Application.LoadLevel("sandbox");
 	}
 	public override void OnCursorOver() {

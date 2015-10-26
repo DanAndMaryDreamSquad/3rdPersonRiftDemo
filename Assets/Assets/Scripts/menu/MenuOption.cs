@@ -7,7 +7,7 @@ public class MenuOption : MonoBehaviour {
 	Text menuText;
 	MenuAction menuAction;
 
-	void Start () {
+	void Awake () {
 		menuText = GetComponent<Text>();
 		menuAction = GetComponent<MenuAction>();
 	}

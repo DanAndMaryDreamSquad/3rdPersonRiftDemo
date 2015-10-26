@@ -14,7 +14,8 @@ public class MenuCursor : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        currentSelection = options [0];
+		currentSelection = options [0];
+		currentSelection.OnCursorOver();
     }
     
     // Update is called once per frame

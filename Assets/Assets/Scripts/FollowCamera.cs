@@ -10,6 +10,7 @@ public class FollowCamera : MonoBehaviour {
     public float followDistance;
     public float followDistanceMax;
     public float followDistanceMin;
+	public GameObject helpMenu;
     Vector3 offset;
     float angle = 0;
     float pitch = 30;
@@ -35,7 +36,7 @@ public class FollowCamera : MonoBehaviour {
         GameManager.CameraMode mode = GameManager.instance.GetCameraMode ();
 
         bool topDownInput = Input.GetAxis ("TopDown") > 0.5f;
-        // If the camera mode is MANUAL. The player can just "Look at Player" then pivot to the top to achieve this
+        // If the camera mode is MANUAL, The player can just "Look at Player" then pivot to the top to achieve this
         if (mode == GameManager.CameraMode.SEMI_AUTO && canChangeTopDown && topDownInput) {
 			pendingTopDownMode = !topDownMode;
             canChangeTopDown = false;
@@ -71,6 +72,12 @@ public class FollowCamera : MonoBehaviour {
             ManualCamera();
             break;
         }
+
+		if (Input.GetButton("Help")) {
+			helpMenu.SetActive(true);
+		} else {
+			helpMenu.SetActive(false);
+		}
 
 
         
@@ -150,13 +157,13 @@ public class FollowCamera : MonoBehaviour {
     void SemiAutoCamera() {
         float inputSwivel = -Input.GetAxis ("Swivel");
         float desiredAngle = angle;
-        if (canSwivel && Mathf.Abs(inputSwivel) != 0) {
+        if (canSwivel && Mathf.Abs(inputSwivel) > 0.12f) {
             int direction = inputSwivel > 0 ? 1 : -1;
             pendingAngle = desiredAngle + (45 * direction);
 			canSwivel = false;			
 			StartFadingOut();
         }
-        if (inputSwivel == 0) {
+        if (Mathf.Abs(inputSwivel) < 0.12f) {
             canSwivel = true;
         }
        

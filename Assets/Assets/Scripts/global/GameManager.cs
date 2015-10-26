@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
     
@@ -11,8 +12,8 @@ public class GameManager : MonoBehaviour {
         AUTO,
         SEMI_AUTO,
         MANUAL
-    }
-	CameraMode cameraMode = CameraMode.SEMI_AUTO;
+	}
+	CameraMode cameraMode = CameraMode.MANUAL;
 
     //Awake is always called before any Start functions
     void Awake () {
@@ -42,5 +43,18 @@ public class GameManager : MonoBehaviour {
 
 	public CameraMode GetCameraMode() {
 		return cameraMode;
+	}
+
+	public void WinGame() {
+		GameObject obj = GameObject.FindGameObjectWithTag("TextTag");
+		obj.GetComponent<Text>().color = Color.white;
+		StartCoroutine("RestartAfterDelay");
+	}
+
+	IEnumerator RestartAfterDelay()	{
+		yield return new WaitForSeconds(7);
+
+		// Code to execute after the delay
+		Application.LoadLevel("titlemenurift");
 	}
 }

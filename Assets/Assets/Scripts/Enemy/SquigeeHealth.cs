@@ -18,6 +18,9 @@ public class SquigeeHealth : MonoBehaviour {
 
 	void Defeated () {
 		isDefeated = true;
+		if (this.gameObject.tag == "Boss") {
+			GameManager.instance.WinGame();
+		}
 	}
 
 	public void PoofAway () {
@@ -29,4 +32,5 @@ public class SquigeeHealth : MonoBehaviour {
 
 		Instantiate(explosion, this.transform.position, this.transform.rotation);
 	}
+
 }
